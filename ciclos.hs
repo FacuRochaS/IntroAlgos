@@ -126,3 +126,100 @@ repartir :: [String] -> [String] -> [(String,String)]
 repartir [] [] = []
 repartir (x:xs) (y:ys) = (x,y) : repartir xs ys
 repartir _ _ = [] 
+
+--7)
+apellidos :: [(String,String, Int)] -> [String]
+apellidos [] = []
+apellidos ((x1,x2,x3):xs) = x2 : apellidos xs
+
+
+--8)
+--8. Definí recursivamente los operadores básicos de listas: length, !!, take, drop, ++. Para los operadores
+--take y drop deberás hacer recursión en ambos parámetros, en el parámetro lista y en el parámetro
+--numérico.
+
+length2 :: [a] -> Int
+length2 [] = 0
+length2 (_:xs) = 1 + length2 xs
+
+-- uso "_" para especificar que no uso el primer elemento y no de error de que hay variables sin usar
+
+
+
+-- !!
+
+indice :: Int -> [a] -> a
+indice _ [] = error "Indice fuera de lista"
+indice 0 (x:_) = x
+indice y (_:xs) = indice (y - 1) xs 
+
+-- take
+tomar :: Int -> [a] -> [a]
+tomar 0 _ = []
+tomar _ [] = [] 
+tomar y (x:xs) = x : tomar (y-1) xs
+
+-- drop
+eliminar :: Int -> [a] -> [a]
+eliminar _ [] = [] 
+eliminar y (x:xs)  
+    | (y > 1) = eliminar (y-1) xs
+    | (y == 1) = xs
+
+-- ++
+concatenar :: [a] -> [a] -> [a]
+concatenar [] [] = []
+concatenar [] (x:xs) = x : concatenar [] xs 
+concatenar (x:xs) y = x : concatenar xs  y
+
+
+--9)
+-- (i) Definí funciones por recursión para cada una de las siguientes descripciones. 
+-- (ii) Evaluá los ejemplos manualmente
+-- (iii) Identificá si las funciones son de algún tipo ya conocido (filter, map, fold). 
+
+--a) maximo :: [Int] -> Int, que calcula el máximo elemento de una lista de enteros.
+-- Por ejemplo: maximo [2,5,1,7,3] = 7
+
+--minBound
+maximo2 :: [Int] -> Int
+maximo2 [] = minBound                   --Caso Base (CB)
+maximo2 (x:xs)
+    | x >= maximo2 xs = x            --Caso Inductivo 1 (CI1)
+    | otherwise = maximo2 xs         --Caso Inductivo 2 (CI2)
+
+
+
+maximo :: [Int] -> Int
+maximo (x:xs)
+    | xs == [] = x                  --Caso Base (CB)
+    | x >= maximo xs = x            --Caso Inductivo 1 (CI1)
+    | otherwise = maximo xs         --Caso Inductivo 2 (CI2)
+
+
+
+-- Evaluar con [1,9,2]
+-- maximo [1,9,2]
+-- = {CI1, x:= 1, xs:=[9,2]}
+-- 1 >= maximo [9,2]
+-- {CI1, x:=9, xs:=[2]}
+-- 1 >= (9 >= maximo[2])
+-- {CB, x:=2, xs:=[]}
+-- 1 >= (9 >= ([] == []))
+-- {def CB ([]==[]) := x, x:=2 }
+-- 1 >= (9 >= 2)
+-- {def CI1 (9 >= 2):= 9 }
+-- 1 >= 9
+-- {def CI2 (1 >= 9):= 9 }
+-- 9
+
+--Tipo FOld
+
+
+--b) sumaPares :: [(Int, Int)] -> Int, que dada una lista de pares de números,
+-- devuelve la sumatoria de todos los números de todos los pares.
+--Por ejemplo: sumaPares [(1,2)(7,8)(11,0)] = 29
+
+sumaPares :: [(Int, Int)] -> Int
+sumaPares [] = 0
+sumaPares ((x,y):xs)= x + y + sumaPares xs
